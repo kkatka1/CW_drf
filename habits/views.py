@@ -14,14 +14,9 @@ class HabitViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, IsOwnerOrPublicReadOnly]
     pagination_class = HabitPagination
 
+
     def get_queryset(self):
-        user = self.request.user
-        # Публичные привычки или свои
-        if self.action == "list":
-            return Habit.objects.filter(user=user) | Habit.objects.filter(
-                is_public=True
-            )
-        return Habit.objects.filter(user=user)
+        return super().get_queryset().filter(user=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

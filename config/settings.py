@@ -1,5 +1,6 @@
 from pathlib import Path
 from decouple import config
+from celery.schedules import crontab
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -117,8 +118,14 @@ CELERY_ENABLE_UTC = True
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
-# django-celery-beatTELEGRAM_URL = "https://api.telegram.org/bot"
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+CELERY_BEAT_SCHEDULE = {
+    "send_reminders_task": {
+        "task": "habits.tasks.send_reminders_task",
+        "schedule": crontab(minute="*/1"),
+    },
+}
 
 TELEGRAM_URL = config("TELEGRAM_URL")
 TELEGRAM_TOKEN = config("TELEGRAM_TOKEN")
