@@ -30,6 +30,8 @@ jobs:
       DEBUG: false
       CELERY_BROKER_URL: redis://localhost:6379/0
       CELERY_RESULT_BACKEND: redis://localhost:6379/0
+      TELEGRAM_URL: ${{ secrets.TELEGRAM_URL }}
+      TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
