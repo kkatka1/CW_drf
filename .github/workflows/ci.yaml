@@ -77,9 +77,20 @@ jobs:
       - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          cd /var/www/myapp || exit 1
-          git reset --hard origin/main
-          docker compose --env-file /var/www/myapp/.env pull
-          docker compose --env-file /var/www/myapp/.env down
-          docker compose --env-file /var/www/myapp/.env up -d --build
+            set -e
+          
+            cd /var/www/myapp || exit 1
+          
+            echo " Updating repo..."
+            git reset --hard origin/main
+          
+            echo " Removing orphan containers and old DB container if exists..."
+            docker rm -f myapp-db-1 || true
+            docker compose --env-file .env.prod down -v --remove-orphans
+          
+            echo " Pulling images and rebuilding project..."
+            docker compose --env-file .env.prod pull || true
+            docker compose --env-file .env.prod up -d --build
+          
+            echo " Deployed successfully"
           EOF
