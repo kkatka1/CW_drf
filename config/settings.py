@@ -10,7 +10,8 @@ SECRET_KEY = config("SECRET_KEY")
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config("ALLOWED_HOSTS").split(",")
+
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -150,4 +151,7 @@ TELEGRAM_URL = config("TELEGRAM_URL")
 TELEGRAM_TOKEN = config("TELEGRAM_TOKEN")
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-CSRF_TRUSTED_ORIGINS = ["http://localhost:8080"]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8080",
+    "http://84.201.143.90:8080"
+]
